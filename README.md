@@ -14,9 +14,10 @@ It also contains snippets for scdoc help files.
 * [scvim](https://github.com/supercollider/scvim) or [scnvim](github.com/davidgranstrom/scnvim)
 
 ## Install
-Follow your plugin managers instructions.
-
 To install using vim-plug
 1. Add this to your init.vim / .vimrc:
 `Plug 'madskjeldgaard/vim-supercollider-snippets'`
 2. Open Vim and run the command `:PlugInstall`
+
+
+Otherwise, follow your plugin manager's instructions.

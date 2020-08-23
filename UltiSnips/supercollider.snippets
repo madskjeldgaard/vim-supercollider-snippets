@@ -16,6 +16,18 @@ endsnippet
 #############
 #  classes  #
 #############
+snippet /cl(ass)?/ "A SuperCollider class" rb
+${1:MyClass}{
+
+	*new { | ${2: arga, argb, argc} |
+		^super.new.init($2)
+	}
+
+	init { | $2 |
+	${0}
+	}
+}
+endsnippet
 
 snippet pseudo "A pseudo ugen class"
 ${1:Reverb1} {
@@ -24,12 +36,6 @@ ${1:Reverb1} {
 		^sig
 	}
 }
-endsnippet
-
-##########
-#  help  #
-##########
-snippet help
 endsnippet
 
 ####################
@@ -41,10 +47,9 @@ ${2:var sig = ${1:SinOsc.ar(414)};}
 SynthDef.wrap(${3:{|${5:in}, freq| $5 * SinOsc.ar(freq)}}, prependArgs: [${4:sig}]);
 endsnippet
 
-
-########################
-#  ndef and nodeproxy  #
-########################
+############
+#  JITLib  #
+############
 
 snippet /nd(ef)?/ "Ndef" rb
 ${2:// $1}
@@ -150,21 +155,9 @@ snippet ps "Pseg"
 Pseg(Pseq(${1:[0.0,1.0,0.0]}), ${2:1}, ${3:Pwhite(1.0,10.0)}, ${4:inf})
 endsnippet
 
-############# Classes ####################
-snippet /cl(ass)?/ "A SuperCollider class" rb
-${1:MyClass}{
-
-	*new { | ${2: arga, argb, argc} |
-		^super.new.init($2)
-	}
-
-	init { | $2 |
-	${0}
-	}
-}
-endsnippet
-
-# Event type
+############
+#  Events  #
+############
 
 snippet eventtype "A custom event type"
 // Event type: $1

@@ -1,0 +1,181 @@
+#############
+#  general  #
+#############
+snippet startup "Common startup function"
+~numChannels = ${1:2};
+s.options.numOutputBusChannels_(~numChannels);
+
+s.waitForBoot{
+	fork{
+		${3:b = Buffer.read(s, "${2:~/testsound/plastic1.wav}".asAbsolutePath);}
+		${4:s.sync; "Done loading buffer".postln;}
+	}
+}
+endsnippet
+
+#############
+#  classes  #
+#############
+
+snippet pseudo "A pseudo ugen class"
+${1:Reverb1} {
+	*${2:ar}{|${4:in}|
+		var sig = ${3:AllpassN.ar(in, 0.05, 0.05.rand, 1.0)};
+		^sig
+	}
+}
+endsnippet
+
+##########
+#  help  #
+##########
+snippet help
+endsnippet
+
+####################
+#  synthdef stuff  #
+####################
+
+snippet wrap "Insert functions in a SynthDef"
+${2:var sig = ${1:SinOsc.ar(414)};}
+SynthDef.wrap(${3:{|${5:in}, freq| $5 * SinOsc.ar(freq)}}, prependArgs: [${4:sig}]);
+endsnippet
+
+
+########################
+#  ndef and nodeproxy  #
+########################
+
+snippet /nd(ef)?/ "Ndef" rb
+${2:// $1}
+Ndef(\\${1:name}, {${0:}});
+endsnippet
+
+snippet spec "ControlSpec"
+Spec.add(\\${1:helpExp}, ControlSpec( minVal: ${2:0.01}, maxVal: ${3:1.0}, warp: \\${4:exp}, step: ${5:0.0}, default: ${6:0.5}));
+endsnippet
+
+snippet npf "NodeProxy Filter"
+Ndef(\\${1:name})[${2:1}] = \\${3:filter} -> ${5:{${4:|in|} ${0}}};
+endsnippet
+
+snippet /nds(ampler)?/ "Ndef sampleplayer" rb
+Ndef(\\${2:sampleplayer$1}, {|buffer, rate=1, trigger=1, start=0, loop=1|
+	PlayBuf.ar(${1:2}, buffer, rate * BufRateScale.kr(buffer), trigger, start, loop,  doneAction: ${3:0});
+}).set(\buffer, ${4:b})${5:.play};
+endsnippet
+
+snippet /ndn(oise)?/ "Ndef noise" rb
+Ndef(\\${2:noise$1}, {|freq=${3:10.0}, minVal=${4:0.0}, maxVal=${5:0.0}|
+	LFNoise${1:2}.kr(freq).range(minVal, maxVal)
+});
+endsnippet
+
+snippet /ndl(fo)?/ "Ndef LFO" rb
+Ndef(\\${2:lfo$1}, {|freq=${3:10.0}, minVal=${4:0.0}, maxVal=${5:0.0}|
+	${1:LFPar}.kr(freq).range(minVal, maxVal)
+})${0};
+endsnippet
+
+snippet /ndm(ap)?/ "Ndef mapping" rb
+Ndef(\\${1:receivingNdef}).map(\\${2:freq}, Ndef(\\${3:lfo}))${0};
+endsnippet
+
+snippet /ndl(ag)?/ "Ndef argument lag" rb
+Ndef(\\${1:lagThis}).lag(\\${2:freq}, ${3:1.0});
+endsnippet
+
+snippet /ndf(adetime)?/ "Ndef cross fade time" rb
+Ndef(\\${1:lagThis}).fadeTime_(${2:1});
+endsnippet
+
+snippet /ndc(copy)?/ "Ndef copying" rb
+Ndef(\\${1:copyThis}).copy(\\${2:toThis});
+${3:Ndef(\\$2).set(\\${4:freq}, ${5:0.234});}
+endsnippet
+
+snippet /ndg(ui)?/ "Ndef gui" rb
+Ndef(\\${1:guiThis}).gui;
+endsnippet
+
+##############
+#  patterns  #
+##############
+
+snippet /pd(ef)?/ "Pdef" rb
+Pdef('${1:name}', 
+	${2:Pbind(
+		\\${5:instrument},${5:\\default},
+		\\${3:dur},${4:1},
+	)}
+);
+endsnippet
+
+snippet /ps(pawn)?/ "Pspawn" rb
+Pspawn(
+	Pbind(
+		\delta, Pwhite(1, 5, inf) * 0.125,
+		\\${2:customParam}, ${3:Pwhite(0.0,1.0)},
+		\method, ${1:Pseq([\par, \seq], inf)},
+		\pattern, Pfunc { |ev|
+			var $2 = ev[\\$2];
+
+			Pbind(
+				\instrument, \\${4:default},
+				\freq, Pwhite(40.0,500.0) * $2,
+				\dur, 0.125$0
+			) 
+		},
+	)
+);
+endsnippet
+
+snippet /pl(ambda)/ "Parallel Plambda example" rb
+Plambda(
+	Ppar([
+		Pbind(
+			\degree, Pseq([0,1,2],inf),
+			\dur, Plet(${1:\\primaryDur}, pattern: ${2:Pseq([0.25, 0.25, 0.125, 0.5, 1],inf)}), 
+		),
+		Pbind(
+			\degree, ${6:Pseq([0,2,3], inf)},
+			${5:\octave, 4,}
+			\dur, ${4: 2 * }Pget($1, default: ${3:1}, repeats: inf),
+		)
+	])
+)
+endsnippet
+
+snippet ps "Pseg"
+Pseg(Pseq(${1:[0.0,1.0,0.0]}), ${2:1}, ${3:Pwhite(1.0,10.0)}, ${4:inf})
+endsnippet
+
+############# Classes ####################
+snippet /cl(ass)?/ "A SuperCollider class" rb
+${1:MyClass}{
+
+	*new { | ${2: arga, argb, argc} |
+		^super.new.init($2)
+	}
+
+	init { | $2 |
+	${0}
+	}
+}
+endsnippet
+
+# Event type
+
+snippet eventtype "A custom event type"
+// Event type: $1
+Event.addEventType(\\${1:newEventType}, {|server|
+	~type = ${2:\note}; // Inherit from this eventtype
+	${0}
+
+	currentEnvironment.play;
+})
+endsnippet
+
+######################
+#  controller stuff  #
+######################

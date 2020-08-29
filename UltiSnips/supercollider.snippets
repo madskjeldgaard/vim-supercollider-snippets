@@ -130,6 +130,16 @@ endsnippet
 #  synthdef stuff  #
 ####################
 
+snippet /sy(nthdef)?/ "SynthDef" r
+SynthDef(\\${1:name}, { | ${2:freq=444}${4:,${3:out=0}} |
+	var sig = ${5:SinOsc.ar(freq)};
+	
+	${6:sig = LPF.ar(sig);}
+
+	${7:Out}.ar(out, sig)
+}).${8:add}$0
+endsnippet
+
 snippet wrap "Insert functions in a SynthDef"
 ${2:var sig = ${1:SinOsc.ar(414)};}
 SynthDef.wrap(${3:{|${5:in}, freq| $5 * SinOsc.ar(freq)}}, prependArgs: [${4:sig}]);

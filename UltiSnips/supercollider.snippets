@@ -13,10 +13,98 @@ s.waitForBoot{
 }
 endsnippet
 
+##############
+#  Language  #
+##############
+snippet /f(unction)?/ "Function body" r
+{${3:| ${1:argument} |}
+	${2:// body}
+}$0
+endsnippet
+
+snippet /fo(rk)?/ "Fork a function" r
+fork{
+	${1:"Starting fork".postln;}	
+	${2:1.wait;}
+	${3:"Done waiting for fork".postln;}
+}
+endsnippet
+
+snippet /ro(outine)?/ "Routine" r
+Routine({
+	${1:1000.yield;}
+	${2:2.wait;}
+	${3:2000.idle(${4:10}); // Wait $4 seconds to return}
+	${5:"Done".postln;}
+})${6:.play}
+endsnippet
+
+snippet /ta(sk)?/ "A pausable process" r
+Task({
+	${1:
+	${2:50}.do({ arg i;
+		${3:i.squared.postln;}
+		${4:0.5.wait;}
+	});}
+})$0
+endsnippet
+
+snippet /lo(op)?/ "Loop" r
+loop{
+	${1:"Beginning of loop".postln;}
+	${2:2.wait;}
+	${3:"End of loop".postln;}
+}
+endsnippet
+
+########################
+#  Control Structures  #
+########################
+snippet /i(f)?/ "Description of snippet" r
+if(${1:true}, {${2:"Expressions was true".postln}}, {${3:"Expression was false".postln}})
+endsnippet
+
+snippet /sw(itch)?/ "Switch conditional" r
+switch(${1:somevariable})
+	{${2:1}} {${3:"It's 1".postln}}
+	${6:{${4:10000}} {${5:"It's 10000!".postln}}}$0
+endsnippet
+
+snippet /ca(se)?/ "Conditional evalutaion with multiple cases" r
+case
+	{ ${1:i} ${2:== 1} } { ${3:\no} }
+	{ $1 ${4:== 1.1} } { ${5:\wrong} }
+	{ $1 ${6:== 1.9} } { ${7:\ok} }$0
+endsnippet
+
+#############################
+#  Collection manipulation  #
+#############################
+
+snippet /d(o)?/ "Do" r
+do{${3:|${1:i}|} ${2:i.postln}}
+endsnippet
+
+snippet /rev(ersedo)?/ "Reverse do" r
+reverseDo{${3:|${1:i}|} ${2:i.postln}}
+endsnippet
+
+snippet /co(llect)?/ "Collect over collectable" r
+collect{${3:|${1:i}|} ${2:i * 20}}
+endsnippet
+
+snippet /se(lect)?/ "select" r
+select{${3:|${1:i}|} ${2:i * 20}}
+endsnippet
+
+snippet /re(ject)?/ "reject" r
+reject{${3:|${1:i}|} ${2:i == 20}}
+endsnippet
+
 #############
 #  classes  #
 #############
-snippet /cl(ass)?/ "A SuperCollider class" rb
+snippet /cl(ass)?/ "A SuperCollider class" r
 ${1:MyClass}{
 
 	*new { | ${2: arga, argb, argc} |
@@ -30,7 +118,7 @@ ${1:MyClass}{
 endsnippet
 
 snippet pseudo "A pseudo ugen class"
-${1:Reverb1} {
+${1:Rever1} {
 	*${2:ar}{|${4:in}|
 		var sig = ${3:AllpassN.ar(in, 0.05, 0.05.rand, 1.0)};
 		^sig
@@ -51,7 +139,7 @@ endsnippet
 #  JITLib  #
 ############
 
-snippet /nd(ef)?/ "Ndef" rb
+snippet /nd(ef)?/ "Ndef" r
 ${2:// $1}
 Ndef(\\${1:name}, {${0:}});
 endsnippet
@@ -64,42 +152,42 @@ snippet npf "NodeProxy Filter"
 Ndef(\\${1:name})[${2:1}] = \\${3:filter} -> ${5:{${4:|in|} ${0}}};
 endsnippet
 
-snippet /nds(ampler)?/ "Ndef sampleplayer" rb
+snippet /nds(ampler)?/ "Ndef sampleplayer" r
 Ndef(\\${2:sampleplayer$1}, {|buffer, rate=1, trigger=1, start=0, loop=1|
 	PlayBuf.ar(${1:2}, buffer, rate * BufRateScale.kr(buffer), trigger, start, loop,  doneAction: ${3:0});
 }).set(\buffer, ${4:b})${5:.play};
 endsnippet
 
-snippet /ndn(oise)?/ "Ndef noise" rb
+snippet /ndn(oise)?/ "Ndef noise" r
 Ndef(\\${2:noise$1}, {|freq=${3:10.0}, minVal=${4:0.0}, maxVal=${5:0.0}|
 	LFNoise${1:2}.kr(freq).range(minVal, maxVal)
 });
 endsnippet
 
-snippet /ndl(fo)?/ "Ndef LFO" rb
+snippet /ndl(fo)?/ "Ndef LFO" r
 Ndef(\\${2:lfo$1}, {|freq=${3:10.0}, minVal=${4:0.0}, maxVal=${5:0.0}|
 	${1:LFPar}.kr(freq).range(minVal, maxVal)
 })${0};
 endsnippet
 
-snippet /ndm(ap)?/ "Ndef mapping" rb
+snippet /ndm(ap)?/ "Ndef mapping" r
 Ndef(\\${1:receivingNdef}).map(\\${2:freq}, Ndef(\\${3:lfo}))${0};
 endsnippet
 
-snippet /ndl(ag)?/ "Ndef argument lag" rb
+snippet /ndl(ag)?/ "Ndef argument lag" r
 Ndef(\\${1:lagThis}).lag(\\${2:freq}, ${3:1.0});
 endsnippet
 
-snippet /ndf(adetime)?/ "Ndef cross fade time" rb
+snippet /ndf(adetime)?/ "Ndef cross fade time" r
 Ndef(\\${1:lagThis}).fadeTime_(${2:1});
 endsnippet
 
-snippet /ndc(copy)?/ "Ndef copying" rb
+snippet /ndc(copy)?/ "Ndef copying" r
 Ndef(\\${1:copyThis}).copy(\\${2:toThis});
 ${3:Ndef(\\$2).set(\\${4:freq}, ${5:0.234});}
 endsnippet
 
-snippet /ndg(ui)?/ "Ndef gui" rb
+snippet /ndg(ui)?/ "Ndef gui" r
 Ndef(\\${1:guiThis}).gui;
 endsnippet
 
@@ -107,7 +195,7 @@ endsnippet
 #  patterns  #
 ##############
 
-snippet /pd(ef)?/ "Pdef" rb
+snippet /pd(ef)?/ "Pdef" r
 Pdef('${1:name}', 
 	${2:Pbind(
 		\\${5:instrument},${5:\\default},
@@ -116,7 +204,7 @@ Pdef('${1:name}',
 );
 endsnippet
 
-snippet /ps(pawn)?/ "Pspawn" rb
+snippet /ps(pawn)?/ "Pspawn" r
 Pspawn(
 	Pbind(
 		\delta, Pwhite(1, 5, inf) * 0.125,
@@ -135,7 +223,7 @@ Pspawn(
 );
 endsnippet
 
-snippet /pl(ambda)/ "Parallel Plambda example" rb
+snippet /pl(ambda)/ "Parallel Plambda example" r
 Plambda(
 	Ppar([
 		Pbind(

@@ -13,11 +13,11 @@ The snippets make extensive use of Python interpolation to do various things.
 Mostly this is used to put random values in classes every time the snippet is expanded.
 
 For example with pattern classes always suggesting random values (that you can then choose to delete if you want to)
-![python-interp1](python-interpolation-scsnips-lfos.gif)
+![python-interp1](python-interpolation-scsnips-patterns.gif)
 
 Or always initialising an Ndef with a random LFO:
 
-![python-interp2](python-interpolation-scsnips-patterns.gif)
+![python-interp2](python-interpolation-scsnips-lfos.gif)
 
 
 ## Requirements

@@ -9,43 +9,73 @@ global !p
 random_lfo_ugen_candidates = ["LFNoise0", "LFNoise1", "LFNoise2", "SinOsc", "LFSaw", "LFCub", "LFTri"]
 random_sound_ugen_candidates = ["SinOsc", "Saw", "LFTri", "Blip"]
 
-def ranfloat(minimum=0.0, maximum=1.0, roundto=2):
-	ran = round(random.uniform(minimum, maximum), roundto)
-	if not snip.c: snip.rv = ran
+listpats = ["Pseq", "Prand", "Pxrand", "Pshuf"]
 
-def ranfloat(minimum=0.0, maximum=1.0, roundto=2):
+# Random generators
+def genfloat(minimum=0.0, maximum=1.0, roundto=2):
 	ran = round(random.uniform(minimum, maximum), roundto)
-	if not snip.c: snip.rv = ran
+	return ran
 
-def ranarray(size=4, minimum=0.0, maximum=1.0, roundto=2):
+def genint(minimum=0, maximum=10):
+	ran = random.randint(minimum,maximum)
+	return ran
+
+def genintarray(size=4, minimum=0, maximum=10):
 	array = ""
 	for i in range(0,size):
-		ran = round(random.uniform(minimum, maximum), roundto)
-		ran = "{}".format(ran)
+		f = genint(minimum, maximum)
+		ran = "{}".format(f)
 
 		if i <= (size-2):
-			ran += ", ".format(i)
-
+			ran += ", "
 		array += str(ran)
+
 	array = "[" + array + "]"
-	if not snip.c: snip.rv = array
+	return array
+
+def genfloatarray(size=4, minimum=0.0, maximum=1.0, roundto=2):
+	array = ""
+	for i in range(0,size):
+		f = genfloat(minimum, maximum, roundto)
+		ran = "{}".format(f)
+
+		if i <= (size-2):
+			ran += ", "
+		array += str(ran)
+
+	array = "[" + array + "]"
+	return array
+
+def genlistpat(classname="Pseq", minimum=0.0, maximum=1.0):
+	l = genfloatarray(random.randint(3,8), minimum, maximum)
+	p = "{}({}, inf)".format(classname, l)
+	return p	
+
+def genrandlistpat(minimum=0.0, maximum=1.0):
+	p = random.choice(listpats)	
+	return genlistpat(p, minimum, maximum)
+
+# The following functions return actual snippets
+def ranlistpat(minimum=0.0, maximum=1.0):
+	if not snip.c: snip.rv = genrandlistpat(minimum, maximum)
+
+def ranfloat(minimum=0.0, maximum=1.0, roundto=2):
+	if not snip.c: snip.rv = genfloat(minimum, maximum, roundto)
+
+def ranint(minimum=0, maximum=10):
+	if not snip.c: snip.rv = genint(minimum, maximum)
+
+def ranarray(size=4, minimum=0.0, maximum=1.0, roundto=2):
+	if not snip.c: snip.rv = genfloatarray(size, minimum, maximum, roundto)
+
+def ranintarray(size=4, minimum=0.0, maximum=1.0):
+	if not snip.c: snip.rv = genintarray(size, minimum, maximum)
 
 def ranlfo():
 	if not snip.c: snip.rv = random.choice(random_lfo_ugen_candidates)
 
 def ransoundugen():
 	if not snip.c: snip.rv = random.choice(random_sound_ugen_candidates)
-
-def funkyline(width=40):
-	line="/* "
-	for i in range(0,width):
-		randomchar = random.choice(["~", ",", ".", "-", "_"])
-		line += str(randomchar)
-
-	line += " */"
-
-	return line
-
 endglobal
 
 #############
@@ -64,15 +94,15 @@ ${4:Tested using SuperCollider version `sclang -v|sed 's/sclang //'|sed 's/(.*)/
 */
 endsnippet
 
-snippet line "A spacer line"
-`!p if not snip.c: snip.rv = funkyline()`
-endsnippet
-
-snippet /ran(dfloat)/ "Random float" r
+snippet float "Random float"
 `!p ranfloat(0.0,1.0)`
 endsnippet
 
-snippet ranarray "Random array"
+snippet int "Random integer" 
+`!p ranint(1,10)`
+endsnippet
+
+snippet array "Array literal"
 `!p ranarray()`
 endsnippet
 
@@ -139,7 +169,7 @@ snippet if "Description of snippet"
 if(${1:true}, {${2:"Expressions was true".postln}}, {${3:"Expression was false".postln}})
 endsnippet
 
-snippet /swi(tch)?/ "Switch conditional" r
+snippet switch "Switch conditional"
 switch(${1:somevariable})
 	{${2:1}} {${3:"It's 1".postln}}
 	${6:{${4:10000}} {${5:"It's 10000!".postln}}}$0
@@ -160,19 +190,19 @@ snippet do "Do"
 do{${3:|${1:i}|} ${2:i.postln}}
 endsnippet
 
-snippet /rev(ersedo)?/ "Reverse do" r
+snippet reversedo "Reverse do"
 reverseDo{${3:|${1:i}|} ${2:i.postln}}
 endsnippet
 
-snippet /coll(ect)?/ "Collect" r
+snippet collect "Collect"
 collect{${3:|${1:i}|} ${2:i * 20}}
 endsnippet
 
-snippet /sel(ect)?/ "select" r
+snippet select "select"
 select{${3:|${1:i}|} ${2:i * 20}}
 endsnippet
 
-snippet /rej(ect)?/ "reject" r
+snippet reject "reject"
 reject{${3:|${1:i}|} ${2:i ${5:==} ${4:20}}}$0
 endsnippet
 
@@ -205,7 +235,7 @@ endsnippet
 #  synthdef stuff  #
 ####################
 
-snippet /sy(nthdef)?/ "SynthDef" r
+snippet synthdef "SynthDef"
 SynthDef(\\${1:name}, { | ${2:freq=444}${4:,${3:out=0}} |
 	var sig = ${5:`!p ransoundugen()`.ar(freq)};
 	
@@ -217,14 +247,14 @@ endsnippet
 
 snippet wrap "Insert functions in a SynthDef"
 ${2:var sig = ${1:SinOsc.ar(414)};}
-SynthDef.wrap(${3:{|${5:in}, freq| $5 * SinOsc.ar(freq)}}, prependArgs: [${4:sig}]);
+SynthDef.wrap(${3:{|${5:in}, freq| $5 * `!p ransoundugen()`.ar(freq)}}, prependArgs: [${4:sig}]);
 endsnippet
 
 ############
 #  JITLib  #
 ############
 
-snippet /nd(ef)?/ "Ndef" r
+snippet ndef "Ndef"
 ${2:// $1}
 Ndef(\\${1:name}, {${0:}});
 endsnippet
@@ -284,41 +314,48 @@ endsnippet
 #  patterns  #
 ##############
 
-snippet /ps(eg)?/ "Pseg" r
-Pseg(Pseq(${1:`!p ranarray(random.randint(3,6), 0.001,1.0)`}), ${2:`!p ranfloat(0.5,4.0)`}, ${3:Pwhite(`!p ranfloat()`,`!p ranfloat(1.0,10.0)`)}, ${4:inf})
+snippet pseg "Pseg"
+Pseg(Pseq(${1:`!p ranarray(random.randint(3,6), 0.001,1.0)`}), ${2:`!p ranint(2,128)`}, ${3:Pwhite(`!p ranfloat()`,`!p ranfloat(1.0,10.0)`)}, ${4:inf})
 endsnippet
 
 # Value patterns
 snippet pseq "Pseq with random list"
-Pseq(${1:`!p ranarray(random.randint(3,10), 0.1, 1.0)`}, ${2:inf})
+Pseq(${1:`!p ranarray(random.randint(3,8), 0.1, 1.0)`}, ${2:inf})
 endsnippet
 
-snippet /pra(nd)?/ "Prand with random list" r
+snippet prand "Prand with random list"
 Prand(${1:`!p ranarray(random.randint(3,10), 0.1, 1.0)`}, ${2:inf})
 endsnippet
 
-snippet /pxra(nd)?/ "Pxrand with random list" r
+snippet pxrand "Pxrand with random list"
 Pxrand(${1:`!p ranarray(random.randint(3,10), 0.1, 1.0)`}, ${2:inf})
 endsnippet
 
-snippet /psh(uf)?/ "Pshuf" r
+snippet pshuf "Pshuf"
 Pshuf(${1:`!p ranarray(random.randint(3,10), 0.1, 1.0)`}, ${2:inf})
 endsnippet
 
-snippet /pwh(ite)?/ "Pwhite" r
+snippet pwhite "Pwhite"
 Pwhite(${1:`!p ranfloat(0.0,1.0)`}, ${2:`!p ranfloat(1.0,2.0)`})
 endsnippet
 
-snippet /pexp(rand)?/ "Pexprand" r
+snippet pexprand "Pexprand"
 Pexprand(${1:`!p ranfloat(0.1,1.0)`}, ${2:`!p ranfloat(100.0,1500.0)`})
 endsnippet
 
-snippet /pbr(own)?/ "Pbrown" r
+snippet pbrown "Pbrown"
 Pbrown(${1:`!p ranfloat(0.0,1.0)`}, ${2:`!p ranfloat(1.0,2.0)`}, ${3:`!p ranfloat(0.01,0.1)`})
 endsnippet
 
 # Event patterns
-snippet /pd(ef)?/ "Pdef" r
+snippet pbind "Pbind"
+Pbind(
+	\dur, ${1:`!p ranlistpat()`},
+	\freq, ${2:`!p ranlistpat(80.0,550.0)`},
+)
+endsnippet
+
+snippet pdef "Pdef"
 Pdef('${1:name}', 
 	${2:Pbind(
 		\\${5:instrument},${5:\\default},
@@ -346,15 +383,15 @@ Pspawn(
 );
 endsnippet
 
-snippet /plam(bda)/ "Parallel Plambda example" r
+snippet plambda "Parallel Plambda example"
 Plambda(
 	Ppar([
 		Pbind(
-			\degree, Pseq([0,1,2],inf),
+			\degree, Pseq(`!p ranintarray(8)`,inf),
 			\dur, Plet(${1:\\primaryDur}, pattern: ${2:Pseq(`!p ranarray(4, 0.25,1.0)`,inf)}), 
 		),
 		Pbind(
-			\degree, ${6:Pseq([0,2,3], inf)},
+			\degree, ${6:Pseq(`!p ranintarray(5)`, inf)},
 			${5:\octave, 4,}
 			\dur, ${4: 2 * }Pget($1, default: ${3:1}, repeats: inf),
 		)

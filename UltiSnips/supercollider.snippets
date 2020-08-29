@@ -1,6 +1,81 @@
+#######################################################################
+#                     vim-supercollider-snippets                      #
+#######################################################################
+
+##############################################
+#  global python functions used in snippets  #
+##############################################
+global !p
+random_lfo_ugen_candidates = ["LFNoise0", "LFNoise1", "LFNoise2", "SinOsc", "LFSaw", "LFCub", "LFTri"]
+random_sound_ugen_candidates = ["SinOsc", "Saw", "LFTri", "Blip"]
+
+def ranfloat(minimum=0.0, maximum=1.0, roundto=2):
+	ran = round(random.uniform(minimum, maximum), roundto)
+	if not snip.c: snip.rv = ran
+
+def ranfloat(minimum=0.0, maximum=1.0, roundto=2):
+	ran = round(random.uniform(minimum, maximum), roundto)
+	if not snip.c: snip.rv = ran
+
+def ranarray(size=4, minimum=0.0, maximum=1.0, roundto=2):
+	array = ""
+	for i in range(0,size):
+		ran = round(random.uniform(minimum, maximum), roundto)
+		ran = "{}".format(ran)
+
+		if i <= (size-2):
+			ran += ", ".format(i)
+
+		array += str(ran)
+	array = "[" + array + "]"
+	if not snip.c: snip.rv = array
+
+def ranlfo():
+	if not snip.c: snip.rv = random.choice(random_lfo_ugen_candidates)
+
+def ransoundugen():
+	if not snip.c: snip.rv = random.choice(random_sound_ugen_candidates)
+
+def funkyline(width=40):
+	line="/* "
+	for i in range(0,width):
+		randomchar = random.choice(["~", ",", ".", "-", "_"])
+		line += str(randomchar)
+
+	line += " */"
+
+	return line
+
+endglobal
+
 #############
 #  general  #
 #############
+snippet /head(er)?/ "File header containing common information" r
+/*
+`!p snip.rv = snip.basename.upper()`
+
+${1:`echo $USER`}, ${2:`date +%Y`} 
+
+${3:https://github.com/`!p snip.rv=t[1].lower().replace(" ", "")`}
+
+${4:Tested using SuperCollider version `sclang -v|sed 's/sclang //'|sed 's/(.*)//'`}
+
+*/
+endsnippet
+
+snippet line "A spacer line"
+`!p if not snip.c: snip.rv = funkyline()`
+endsnippet
+
+snippet /ran(dfloat)/ "Random float" r
+`!p ranfloat(0.0,1.0)`
+endsnippet
+
+snippet ranarray "Random array"
+`!p ranarray()`
+endsnippet
+
 snippet startup "Common startup function"
 ~numChannels = ${1:2};
 s.options.numOutputBusChannels_(~numChannels);
@@ -16,13 +91,13 @@ endsnippet
 ##############
 #  Language  #
 ##############
-snippet /f(unction)?/ "Function body" r
+snippet /func(tion)?/ "Function body" r
 {${3:| ${1:argument} |}
 	${2:// body}
 }$0
 endsnippet
 
-snippet /fo(rk)?/ "Fork a function" r
+snippet fork "Fork a function"
 fork{
 	${1:"Starting fork".postln;}	
 	${2:1.wait;}
@@ -30,7 +105,7 @@ fork{
 }
 endsnippet
 
-snippet /ro(outine)?/ "Routine" r
+snippet /rout(ine)?/ "Routine" r
 Routine({
 	${1:1000.yield;}
 	${2:2.wait;}
@@ -39,7 +114,7 @@ Routine({
 })${6:.play}
 endsnippet
 
-snippet /ta(sk)?/ "A pausable process" r
+snippet task "A pausable process"
 Task({
 	${1:
 	${2:50}.do({ arg i;
@@ -49,7 +124,7 @@ Task({
 })$0
 endsnippet
 
-snippet /lo(op)?/ "Loop" r
+snippet loop "Loop"
 loop{
 	${1:"Beginning of loop".postln;}
 	${2:2.wait;}
@@ -60,17 +135,17 @@ endsnippet
 ########################
 #  Control Structures  #
 ########################
-snippet /i(f)?/ "Description of snippet" r
+snippet if "Description of snippet"
 if(${1:true}, {${2:"Expressions was true".postln}}, {${3:"Expression was false".postln}})
 endsnippet
 
-snippet /sw(itch)?/ "Switch conditional" r
+snippet /swi(tch)?/ "Switch conditional" r
 switch(${1:somevariable})
 	{${2:1}} {${3:"It's 1".postln}}
 	${6:{${4:10000}} {${5:"It's 10000!".postln}}}$0
 endsnippet
 
-snippet /ca(se)?/ "Conditional evalutaion with multiple cases" r
+snippet case "Conditional evalutaion with multiple cases"
 case
 	{ ${1:i} ${2:== 1} } { ${3:\no} }
 	{ $1 ${4:== 1.1} } { ${5:\wrong} }
@@ -81,7 +156,7 @@ endsnippet
 #  Collection manipulation  #
 #############################
 
-snippet /d(o)?/ "Do" r
+snippet do "Do"
 do{${3:|${1:i}|} ${2:i.postln}}
 endsnippet
 
@@ -89,22 +164,22 @@ snippet /rev(ersedo)?/ "Reverse do" r
 reverseDo{${3:|${1:i}|} ${2:i.postln}}
 endsnippet
 
-snippet /co(llect)?/ "Collect over collectable" r
+snippet /coll(ect)?/ "Collect" r
 collect{${3:|${1:i}|} ${2:i * 20}}
 endsnippet
 
-snippet /se(lect)?/ "select" r
+snippet /sel(ect)?/ "select" r
 select{${3:|${1:i}|} ${2:i * 20}}
 endsnippet
 
-snippet /re(ject)?/ "reject" r
-reject{${3:|${1:i}|} ${2:i == 20}}
+snippet /rej(ect)?/ "reject" r
+reject{${3:|${1:i}|} ${2:i ${5:==} ${4:20}}}$0
 endsnippet
 
 #############
 #  classes  #
 #############
-snippet /cl(ass)?/ "A SuperCollider class" r
+snippet class "A SuperCollider class"
 ${1:MyClass}{
 
 	*new { | ${2: arga, argb, argc} |
@@ -118,7 +193,7 @@ ${1:MyClass}{
 endsnippet
 
 snippet pseudo "A pseudo ugen class"
-${1:Rever1} {
+${1:Reverb1} {
 	*${2:ar}{|${4:in}|
 		var sig = ${3:AllpassN.ar(in, 0.05, 0.05.rand, 1.0)};
 		^sig
@@ -132,7 +207,7 @@ endsnippet
 
 snippet /sy(nthdef)?/ "SynthDef" r
 SynthDef(\\${1:name}, { | ${2:freq=444}${4:,${3:out=0}} |
-	var sig = ${5:SinOsc.ar(freq)};
+	var sig = ${5:`!p ransoundugen()`.ar(freq)};
 	
 	${6:sig = LPF.ar(sig);}
 
@@ -169,14 +244,14 @@ Ndef(\\${2:sampleplayer$1}, {|buffer, rate=1, trigger=1, start=0, loop=1|
 endsnippet
 
 snippet /ndn(oise)?/ "Ndef noise" r
-Ndef(\\${2:noise$1}, {|freq=${3:10.0}, minVal=${4:0.0}, maxVal=${5:0.0}|
+Ndef(\\${2:noise$1}, {|freq=${3:`!p ranfloat(0.01,10.0)`}, minVal=${4:0.0}, maxVal=${5:1.0}|
 	LFNoise${1:2}.kr(freq).range(minVal, maxVal)
 });
 endsnippet
 
 snippet /ndl(fo)?/ "Ndef LFO" r
-Ndef(\\${2:lfo$1}, {|freq=${3:10.0}, minVal=${4:0.0}, maxVal=${5:0.0}|
-	${1:LFPar}.kr(freq).range(minVal, maxVal)
+Ndef(\\${2:`!p if not snip.c: snip.rv = "lfo_"+str(random.randint(1,1000))`}, {|freq=${3:`!p ranfloat(0.01,10.0)`}, minVal=${4:0.0}, maxVal=${5:1.0}|
+	${1:`!p ranlfo()`}.kr(freq).range(minVal, maxVal)
 })${0};
 endsnippet
 
@@ -184,40 +259,78 @@ snippet /ndm(ap)?/ "Ndef mapping" r
 Ndef(\\${1:receivingNdef}).map(\\${2:freq}, Ndef(\\${3:lfo}))${0};
 endsnippet
 
-snippet /ndl(ag)?/ "Ndef argument lag" r
+snippet /ndla(g)?/ "Ndef argument lag" r
 Ndef(\\${1:lagThis}).lag(\\${2:freq}, ${3:1.0});
 endsnippet
 
 snippet /ndf(adetime)?/ "Ndef cross fade time" r
-Ndef(\\${1:lagThis}).fadeTime_(${2:1});
+Ndef(\\${1:fadeThis}).fadeTime_(${2:1});
 endsnippet
 
 snippet /ndc(copy)?/ "Ndef copying" r
 Ndef(\\${1:copyThis}).copy(\\${2:toThis});
-${3:Ndef(\\$2).set(\\${4:freq}, ${5:0.234});}
+${3:Ndef(\\$2).set(\\${4:freq}, ${5:`!p ranfloat(0.01,10.0)`});}
 endsnippet
 
 snippet /ndg(ui)?/ "Ndef gui" r
 Ndef(\\${1:guiThis}).gui;
 endsnippet
 
+snippet /nds(et)?/ "Set Ndef" r
+Ndef(\\${1:setThis}).set(\\${2:paramName}, ${3: `!p ranfloat()`})
+endsnippet
+
 ##############
 #  patterns  #
 ##############
 
+snippet /ps(eg)?/ "Pseg" r
+Pseg(Pseq(${1:`!p ranarray(random.randint(3,6), 0.001,1.0)`}), ${2:`!p ranfloat(0.5,4.0)`}, ${3:Pwhite(`!p ranfloat()`,`!p ranfloat(1.0,10.0)`)}, ${4:inf})
+endsnippet
+
+# Value patterns
+snippet pseq "Pseq with random list"
+Pseq(${1:`!p ranarray(random.randint(3,10), 0.1, 1.0)`}, ${2:inf})
+endsnippet
+
+snippet /pra(nd)?/ "Prand with random list" r
+Prand(${1:`!p ranarray(random.randint(3,10), 0.1, 1.0)`}, ${2:inf})
+endsnippet
+
+snippet /pxra(nd)?/ "Pxrand with random list" r
+Pxrand(${1:`!p ranarray(random.randint(3,10), 0.1, 1.0)`}, ${2:inf})
+endsnippet
+
+snippet /psh(uf)?/ "Pshuf" r
+Pshuf(${1:`!p ranarray(random.randint(3,10), 0.1, 1.0)`}, ${2:inf})
+endsnippet
+
+snippet /pwh(ite)?/ "Pwhite" r
+Pwhite(${1:`!p ranfloat(0.0,1.0)`}, ${2:`!p ranfloat(1.0,2.0)`})
+endsnippet
+
+snippet /pexp(rand)?/ "Pexprand" r
+Pexprand(${1:`!p ranfloat(0.1,1.0)`}, ${2:`!p ranfloat(100.0,1500.0)`})
+endsnippet
+
+snippet /pbr(own)?/ "Pbrown" r
+Pbrown(${1:`!p ranfloat(0.0,1.0)`}, ${2:`!p ranfloat(1.0,2.0)`}, ${3:`!p ranfloat(0.01,0.1)`})
+endsnippet
+
+# Event patterns
 snippet /pd(ef)?/ "Pdef" r
 Pdef('${1:name}', 
 	${2:Pbind(
 		\\${5:instrument},${5:\\default},
-		\\${3:dur},${4:1},
+		\\${3:dur},${4:`!p ranfloat(0.1,1.0)`},
 	)}
 );
 endsnippet
 
-snippet /ps(pawn)?/ "Pspawn" r
+snippet pspawn "Pspawn"
 Pspawn(
 	Pbind(
-		\delta, Pwhite(1, 5, inf) * 0.125,
+		\delta, Pwhite(`!p ranfloat(0.25,4.0)`, `!p ranfloat(0.25,4.0)`, inf),
 		\\${2:customParam}, ${3:Pwhite(0.0,1.0)},
 		\method, ${1:Pseq([\par, \seq], inf)},
 		\pattern, Pfunc { |ev|
@@ -233,12 +346,12 @@ Pspawn(
 );
 endsnippet
 
-snippet /pl(ambda)/ "Parallel Plambda example" r
+snippet /plam(bda)/ "Parallel Plambda example" r
 Plambda(
 	Ppar([
 		Pbind(
 			\degree, Pseq([0,1,2],inf),
-			\dur, Plet(${1:\\primaryDur}, pattern: ${2:Pseq([0.25, 0.25, 0.125, 0.5, 1],inf)}), 
+			\dur, Plet(${1:\\primaryDur}, pattern: ${2:Pseq(`!p ranarray(4, 0.25,1.0)`,inf)}), 
 		),
 		Pbind(
 			\degree, ${6:Pseq([0,2,3], inf)},
@@ -247,10 +360,6 @@ Plambda(
 		)
 	])
 )
-endsnippet
-
-snippet ps "Pseg"
-Pseg(Pseq(${1:[0.0,1.0,0.0]}), ${2:1}, ${3:Pwhite(1.0,10.0)}, ${4:inf})
 endsnippet
 
 ############
@@ -263,7 +372,7 @@ Event.addEventType(\\${1:newEventType}, {|server|
 	~type = ${2:\note}; // Inherit from this eventtype
 	${0}
 
-	currentEnvironment.play;
+	${3:currentEnvironment.play;}
 })
 endsnippet
 

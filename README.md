@@ -16,6 +16,7 @@ For example with pattern classes always suggesting random values (that you can t
 ![python-interp1](python-interpolation-scsnips-lfos.gif)
 
 Or always initialising an Ndef with a random LFO:
+
 ![python-interp2](python-interpolation-scsnips-patterns.gif)
 
 

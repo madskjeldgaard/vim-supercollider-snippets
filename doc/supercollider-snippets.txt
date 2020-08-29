@@ -1,0 +1,54 @@
+*supercollider-snippets.txt* SuperCollider snippets
+
+ _______  _______ ~
+(  ____ \(  ____ \~
+| (    \/| (    \/~
+| (_____ | |      ~
+(_____  )| |      ~
+      ) || |      ~
+/\____) || (____/\~
+\_______)(_______/~
+                  
+ _______  _       _________ _______  _______  _______ _________ _______ ~
+(  ____ \( (    /|\__   __/(  ____ )(  ____ )(  ____ \\__   __/(  ____ \~
+| (    \/|  \  ( |   ) (   | (    )|| (    )|| (    \/   ) (   | (    \/~
+| (_____ |   \ | |   | |   | (____)|| (____)|| (__       | |   | (_____ ~
+(_____  )| (\ \) |   | |   |  _____)|  _____)|  __)      | |   (_____  )~
+      ) || | \   |   | |   | (      | (      | (         | |         ) |~
+/\____) || )  \  |___) (___| )      | )      | (____/\   | |   /\____) |~
+\_______)|/    )_)\_______/|/       |/       (_______/   )_(   \_______)~
+                                                                        ~
+	snippets for SuperCollider files
+
+supercollider-snippets 						*supercollider-snippets*
+
+1. Description..............................|supercollider-snippets-description|
+2. Commands..............................|supercollider-snippets-commands|
+
+==============================================================================
+DESCRIPTION                                                 *supercollider-snippets-description*
+Snippet files for SuperCollider filetypes to be used with the UltiSnips plugin.
+
+The plugin contains snippets covering all of the |scdoc| syntax for .schelp
+files as well as a lot of useful snippets for sclang itself.
+
+The plugin goes really well with scnvim (for NeoVim) or scvim (for vanilla Vim):
+- scnvim: https://github.com/davidgranstrom/scnvim
+- scvim: https://github.com/supercollider/scvim 
+
+Although it should be compatible with both, it is written with NeoVim and
+scnvim in mind. The latter has a system for autogenerating snippets from the
+class library, meaning you can type `SinOsc.ar<tab>` to expand the parameters of SinOsc.
+
+Therefore, these snippets cover other usecases such as common coding patterns,
+smaller or bigger examples, scdoc syntax etcetera.
+
+==============================================================================
+COMMANDS                                                 *supercollider-snippets-commands*
+
+Command                        Description
+-------                        -----------
+`EditSCSnippets`               Edit snippets for .scd and .sc files
+`EditSCHelpSnippets`           Edit snippets for .schelp files
+
+https://github.com/supercollider/scvim

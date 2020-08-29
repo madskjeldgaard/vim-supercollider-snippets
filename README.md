@@ -7,6 +7,18 @@ Covers both normal supercollider files and the full scdoc syntax.
 
 See `:h supercollider-snippets` for more info.
 
+## Python interpolation
+The snippets make extensive use of Python interpolation to do various things.
+
+Mostly this is used to put random values in classes every time the snippet is expanded.
+
+For example with pattern classes always suggesting random values (that you can then choose to delete if you want to)
+![python-interp1](python-interpolation-scsnips-lfos.gif)
+
+Or always initialising an Ndef with a random LFO:
+![python-interp2](python-interpolation-scsnips-patterns.gif)
+
+
 ## Requirements
 * Python 3
 * [UltiSnips](https://github.com/SirVer/ultisnips)

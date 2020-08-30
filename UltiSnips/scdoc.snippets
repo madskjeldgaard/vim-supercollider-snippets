@@ -6,7 +6,7 @@
 #  Full example help files  #
 ############################
 
-snippet /te(mplate)?/ "Full example help file" rb
+snippet /temp(late)?/ "Full example help file" rb
 TITLE:: ${1:`!p snip.rv = snip.basename`}
 SUMMARY:: ${2:pulse oscillator}
 CATEGORIES:: ${3:UGens>Generators>Deterministic}, ${4:UGens>Oscillators}
@@ -37,7 +37,7 @@ ${17:50 Hz wave:}
 CODE:: ${18:{ LFPulse.ar(50) * 0.1 }.play; }::
 endsnippet
 
-snippet /tu(torial)?/ "Full example tutorial help file" rb
+snippet /tut(orial)?/ "Full example tutorial help file" rb
 TITLE:: ${1:`!p snip.rv = snip.basename`}
 SUMMARY:: ${2:A tutorial}
 CATEGORIES:: ${3:Tutorials}, ${4:Server}
@@ -66,23 +66,23 @@ endsnippet
 #  Header tags  #
 #################
 
-snippet /ti(tle)?/ "title header" br
+snippet /tit(le)?/ "title header" r
 TITLE:: ${1:`!p snip.rv = snip.basename`}
 endsnippet
 
-snippet /ca(tegories)?/ "A comma seperated list of document categories" br
+snippet /cat(egories)?/ "A comma seperated list of document categories" r
 CATEGORIES:: ${1:External Control>OSC}, ${2:Scheduling>Clocks}
 endsnippet
 
-snippet /re(lated)?/ "Related docs" br
+snippet /rel(ated)?/ "Related docs" r
 RELATED:: ${1:Classes/SCDoc}, ${2:Scheduling>Clocks}
 endsnippet
 
-snippet /su(mmary)?/ "Short summary" br
+snippet /sum(mary)?/ "Short summary" r
 SUMMARY:: ${1:SCDoc markup language syntax}
 endsnippet
 
-snippet /re(direct)?/ "For class redirect systems, specify the name of the instance variable holding the implementing class" br
+snippet /red(irect)?/ "For class redirect systems, specify the name of the instance variable holding the implementing class" r
 REDIRECT:: ${1:implClass}
 endsnippet
 
@@ -113,14 +113,14 @@ endsnippet
 #####################
 #  Level 2 headers  #
 #####################
-snippet /su(bsection)?/ "A named subsection. The name should be plain text and can not contain any tags." br
+snippet /sub(section)?/ "A named subsection. The name should be plain text and can not contain any tags." br
 SUBSECTION:: ${1:name}
 endsnippet
 
 #################
 #  Method tags  #
 #################
-snippet /me(thod)?/ "Document one or more methods, given as a comma sepeated list of methodnames" br
+snippet /meth(od)?/ "Document one or more methods, given as a comma sepeated list of methodnames" br
 METHOD:: ${1:methodname}
 endsnippet
 
@@ -128,19 +128,20 @@ snippet /pr(ivate)?/ "marks one or more methods as private, so that it does not 
 PRIVATE::${1:methodname}
 endsnippet
 
-snippet /co(pymethod)?/ "Copy a method documentation from a class reference and insert it here as if the method was documented in this document. The methodname must be prefixed with * for classmethods and - for instancemethods." br
+snippet /copy(method)?/ "Copy a method documentation from a class reference and insert it here as if the method was documented in this document. The methodname must be prefixed with * for classmethods and - for instancemethods." br
 COPYMETHOD::${1:SinOsc} ${2:*ar}
 endsnippet
 
-snippet /ar(gument)?/ "Describe an argument in a method" br
+snippet /arg(ument)?/ "Describe an argument in a method" br
 ARGUMENT::${1:argname}
+$0
 endsnippet
 
-snippet /re(turns)?/ "Describe the return value of a method" br
+snippet /ret(urns)?/ "Describe the return value of a method" br
 RETURNS::${1:Integer}
 endsnippet
 
-snippet /di(scussion)?/ "This optional section can contain a more detailed discussion and code examples related to this method." br
+snippet /disc(ussion)?/ "This optional section can contain a more detailed discussion and code examples related to this method." br
 DISCUSSION::
 ${1:method:: ar, kr
 This is a nice method, try it out!
@@ -157,56 +158,53 @@ endsnippet
 ################
 # These tags enclose a text and ends with a single :: (double-colon) end-tag. The enclosed text can not contain any other tags. 
 
-snippet /st(rong)?/ "Render text in bold font" br
+snippet /str(ong)?/ "Render text in bold font" r
 STRONG::${1:Very strong text}::
 endsnippet
 
-snippet /bo(ld)?/ "Render text in bold font" br
+snippet /bo(ld)?/ "Render text in bold font" r
 STRONG::${1:Very strong text}::
 endsnippet
 
-snippet /em(phasis)?/ "Render text in emphasized font / italics" br
+snippet /em(phasis)?/ "Render text in emphasized font / italics" r
 EMPHASIS::${1:This is in italics}::
 endsnippet
 
-snippet /it(alics)?/ "Render text in emphasized font / italics" br
+snippet /it(alics)?/ "Render text in emphasized font / italics" r
 EMPHASIS::${1:This is in italics}::
 endsnippet
 
-snippet /so(ft)?/ "Render text in a soft shade" br
+snippet /so(ft)?/ "Render text in a soft shade" r
 SOFT::${1:Soft text}::
 endsnippet
 
-snippet /li(nk)?/ "Create link to another document" br
+snippet /li(nk)?/ "Create link to another document" r
 ${2:See }LINK::#${1:Classes/SinOsc#*ar}::
 endsnippet
 
-snippet /an(chor)?/ "Link to section anchor" br
+snippet /an(chor)?/ "Link to section anchor" r
 ${2:See section } LINK::#${1:Introduction}:: ${3:in this document.}
 endsnippet
 
-snippet /im(age)?/ "Insert image, the text should be the relative path to the image" br
+snippet /im(age)?/ "Insert image, the text should be the relative path to the image" r
 IMAGE::${1:foo.png}::
 endsnippet
 
-snippet /co(deblock)?/ "Render syntax-coloured code in block form" br
+snippet /co(de)?/ "Render syntax-coloured code inline" r
+CODE::${1:SinOsc.ar(441)}::
+endsnippet
+
+snippet block "Render syntax-coloured code in block form"
 CODE::
 ${1:SinOsc.ar(freq:441) * LFNoise2.kr(123)}
 ::
 endsnippet
 
-snippet /co(de)?/ "Render syntax-coloured code inline" br
-CODE::${1:SinOsc.ar(441)}::
-endsnippet
-
-snippet /co(deline)?/ "Render syntax-coloured code inline" br
-CODE::${1:SinOsc.ar(441)}::
-endsnippet
 ######################
 #  Lists and tables  #
 ######################
 
-snippet /ta(ble)?/ "Create a table" br
+snippet /tab(le)?/ "Create a table" r
 TABLE::
 	${10:## ${1:a 1} || ${2:a 2} || ${3:a 3}}
 	${11:## ${4:b 1} || ${5:b 2} || ${6:b 3}}
@@ -214,7 +212,7 @@ TABLE::
 ::
 endsnippet
 
-snippet /de(finitionlist)?/ "A definition list item consists of one or more terms prefixed with ## followed by a description prefixed with ||" br
+snippet /def(initionlist)?/ "A definition list item consists of one or more terms prefixed with ## followed by a description prefixed with ||" r
 DEFINITIONLIST::
 	${5:## ${1:sig}
 	|| ${2:Common variable name}}
@@ -251,11 +249,11 @@ snippet /no(te)?/ "Create a NOTE box" br
 NOTE::${1:Here is something to think about}::
 endsnippet
 
-snippet /wa(rning)?/ "Create a WARNING box" br
+snippet /warn(ing)?/ "Create a WARNING box" br
 WARNING::${1:Here is something to think about}::
 endsnippet
 
-snippet /fo(otnote)?/ "Create a footnote which" br
+snippet /foot(note)?/ "Create a footnote which" r
 ${1:Hello I'm a geek}FOOTNOTE::
 ${2:According to http://en.wikipedia.org/wiki/Geek the word geek is a slang term.
 }::
@@ -265,6 +263,6 @@ endsnippet
 #  Other things  #
 ##################
 
-snippet /ke(yword)?/ "Make this document findable by keyword" rb
+snippet /key(word)?/ "Make this document findable by keyword" r
 KEYWORD:: ${1:findMe}${3:,${2:andMe}}
 endsnippet

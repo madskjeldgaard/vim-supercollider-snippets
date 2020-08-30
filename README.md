@@ -1,5 +1,5 @@
 # vim-supercollider-snippets
-![snippets in action](snippets.gif)
+![snippets in action](python-interpolation-pattern-bonanza.gif)
 
 Snippet files for SuperCollider filetypes to be used with the UltiSnips plugin.
 

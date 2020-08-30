@@ -15,9 +15,10 @@ Mostly this is used to put random values in classes every time the snippet is ex
 For example with pattern classes always suggesting random values (that you can then choose to delete if you want to)
 ![python-interp1](python-interpolation-scsnips-patterns.gif)
 
-Or always initialising an Ndef with a random LFO:
+Or always initialising an Ndef with a random fruit name and random contents:
 
-![python-interp2](python-interpolation-scsnips-lfos.gif)
+[python ndef named](python-random-named-ndef.gif)
+
 
 
 ## Requirements

@@ -17,9 +17,7 @@ For example with pattern classes always suggesting random values (that you can t
 
 Or always initialising an Ndef with a random fruit name and random contents:
 
-[python ndef named](python-random-named-ndef.gif)
-
-
+![python ndef named](python-random-named-ndef.gif)
 
 ## Requirements
 * Python 3

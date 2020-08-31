@@ -159,6 +159,16 @@ Task({
 })$0
 endsnippet
 
+snippet tdef "Task def"
+Tdef(\\${1:`!p ranfruitname()`}, {
+	${2:loop{
+		${3:"Loop starting for Tdef $1".postln;}
+		${4:`!p ranint()`.wait;}
+		${5:"Loop ending for Tdef $1!".postln;}
+	}}
+})${6:.play}
+endsnippet
+
 snippet loop "Loop"
 loop{
 	${1:"Beginning of loop".postln;}
@@ -285,7 +295,7 @@ Ndef(\\${2:noisy_`!p ranfruitname()`$1}, {|freq=${3:`!p ranfloat(0.01,10.0)`}, m
 endsnippet
 
 snippet /ndl(fo)?/ "Ndef LFO" r
-Ndef(\\${2:`!p ranfruitname()_lfo`}, {|freq=${3:`!p ranfloat(0.01,10.0)`}, minVal=${4:0.0}, maxVal=${5:1.0}|
+Ndef(\\${2:`!p ranfruitname()`_lfo}, {|freq=${3:`!p ranfloat(0.01,10.0)`}, minVal=${4:0.0}, maxVal=${5:1.0}|
 	${1:`!p ranlfo()`}.kr(freq).range(minVal, maxVal)
 })${0};
 endsnippet
@@ -298,7 +308,7 @@ snippet /ndla(g)?/ "Ndef argument lag" r
 Ndef(\\${1:`!p ranfruitname()`}).lag(\\${2:freq}, ${3:1.0});
 endsnippet
 
-snippet /ndf(adetime)?/ "Ndef cross fade time" r
+snippet /ndfade(time)?/ "Ndef cross fade time" r
 Ndef(\\${1:`!p ranfruitname()`}).fadeTime_(${2:1});
 endsnippet
 
@@ -321,6 +331,10 @@ endsnippet
 
 snippet pseg "Pseg"
 Pseg(Pseq(${1:`!p ranarray(random.randint(3,6), 0.001,1.0)`}), ${2:`!p ranint(2,128)`}, ${3:Pwhite(`!p ranfloat()`,`!p ranfloat(1.0,10.0)`)}, ${4:inf})
+endsnippet
+
+snippet pstep "Pstep"
+Pstep(Pseq(${1:`!p ranarray(random.randint(3,6), 0.001,1.0)`}), ${2:`!p ranint(2,128)`}, ${3:inf})
 endsnippet
 
 # Value patterns
@@ -367,6 +381,15 @@ Pdef(\\${1:`!p ranfruitname()`},
 		\\${3:dur},${4:`!p ranlistpat(0.1,2.0)`},
 	)}
 );
+endsnippet
+
+snippet pdefn "Pdefn" 
+Pdefn(\\${1:`!p ranfruitname()`}, ${2:`!p ranlistpat()`})
+endsnippet
+
+snippet pbindf "Pbindf" 
+${7:// Create modified copy of $1}
+Pbindf(${1:Pdef(\\${2:`!p ranfruitname()`})}, \\${2:dur}, ${3:`!p ranlistpat()`}${4:+}${5:Pkey(\\${6:dur})})
 endsnippet
 
 snippet pspawn "Pspawn"

@@ -9,8 +9,9 @@ global !p
 fruits=["apple","apricot","avocado","banana","bilberry","blackberry","blackcurrant","blueberry","boysenberry","currant","cherry","cherimoya","chicofruit","cloudberry","coconut","cranberry","cucumber","custardapple","damson","date","dragonfruit","durian","elderberry","feijoa","fig","gojiberry","gooseberry","grape","raisin","grapefruit","guava","honeyberry","huckleberry","jabuticaba","jackfruit","jambul","jujube","juniperberry","kiwano","kiwifruit","kumquat","lemon","lime","loquat","longan","lychee","mango","mangosteen","marionberry","melon","cantaloupe","honeydew","watermelon","miraclefruit","mulberry","nectarine","nance","olive","orange","bloodorange","clementine","mandarine","tangerine","papaya","passionfruit","peach","pear","persimmon","physalis","plantain","plum","prune","pineapple","plumcot","pomegranate","pomelo","purplemangosteen","quince","raspberry","salmonberry","rambutan","redcurrant","salalberry","salak","satsuma","soursop","starfruit","solanumquitoense","strawberry","tamarillo","tamarind","uglifruit","yuzu"]
 random_lfo_ugen_candidates = ["LFNoise0", "LFNoise1", "LFNoise2", "SinOsc", "LFSaw", "LFCub", "LFTri"]
 random_sound_ugen_candidates = ["SinOsc", "LFTri", "Blip", "SinOscFB", "SawDPW", "PulseDPW","Formant","VarSaw", "SyncSaw"]
-
 listpats = ["Pseq", "Prand", "Pxrand", "Pshuf"]
+
+last_plet=""
 
 # Random generators
 def genfloat(minimum=0.0, maximum=1.0, roundto=2):
@@ -123,13 +124,96 @@ s.waitForBoot{
 }
 endsnippet
 
+#########
+#  GUI  #
+#########
+
+# TODO #
+# snippet gui "Template for a gui program"
+# endsnippet
+
+snippet /win(dow)?/ "Window" r
+Window.new("${1:`!p ranfruitname()` window}")${2:.front()};
+endsnippet
+
+snippet vlayout "Vlayout"
+VLayout(
+	${1:[${2:Button().states_([["`!p ranfruitname()`"]])}, stretch: ${3:1}],}
+	${4:[${5:TextView().string_("Bar\nBar\nBar\n")}, stretch:${6:3}],}	
+	${7:[${8:Button().states_([["`!p ranfruitname()`"]])}, stretch: ${9:1}],}
+
+)
+endsnippet
+
+snippet hlayout "Hlayout"
+HLayout(
+	${1:[${2:Button().states_([["`!p ranfruitname()`"]])}, stretch: ${3:1}],}
+	${4:[${5:TextView().string_("Bar\nBar\nBar\n")}, stretch:${6:3}],}	
+	${7:[${8:Button().states_([["`!p ranfruitname()`"]])}, stretch: ${9:1}],}
+
+)
+endsnippet
+
+snippet /but(ton)?/ "Gui button" r
+Button(${1:w}${2:, Rect(${3:20}, ${4:20}, ${5:30}, ${6:30})})
+.states_([
+	${7:[${8:"there is suffering"}, ${9:Color.black}, ${10:Color.red}],}			
+	${11:[${12:"the origin of suffering"}, ${13:Color.white}, ${14:Color.black}],}			
+	${15:[${16:"the cessation of suffering"}, ${17:Color.red}, ${18:Color.white}],}			
+	${19:[${20:"there is a path to cessation of suffering"}, ${21:Color.blue}, ${22:Color.brown}]}	
+	])
+.action_({|obj|
+	${23:obj.value.postln;}			
+})
+endsnippet
+
+snippet slider "Gui slider" 
+Slider(${1:w}${2:,Rect(${3:20}, ${4:20}, ${5:80}, ${6:80})}
+.action_({|obj|
+	${7:obj.value.postln;}			
+})
+endsnippet
+
+snippet slider2d "2D slider" 
+Slider2D(${1:w}${2:,Rect(${3:20}, ${4:20}, ${5:80}, ${6:80})}
+.x_(${7:0.5})
+.y_(${8:1.0}) 
+.action_({|obj|
+	${9:"Slider x value: %".format(obj.x).postln;}	
+	${10:"Slider y value: %".format(obj.y).postln;}
+})
+endsnippet
+
+snippet multislider "Multislider"
+MultiSliderView(${1:w}${2:,Rect(${3:20}, ${4:20}, ${5:80}, ${6:80})}
+.size(${7:`!p ranint(4,16)`})
+.drawLines(${8:false})
+.isFilled_(${9:true}) 
+.indexThumbSize_(${10:2.0})
+.action_({|obj|
+	${11:obj.value.postln;}			
+})
+endsnippet
+
+snippet /num(berbox)?/ "gui number box" r
+NumberBox(${1:w}${2:, Rect(${3:20}, ${4:20}, ${5:30}, ${6:30})})
+.action_({|obj|
+	${7:obj.value.postln;}			
+})
+endsnippet
+
+snippet /(static)?text/ "Static text object" r
+StaticText(${1:w}${2:, Rect(${3:20}, ${4:20}, ${5:30}, ${6:30})})
+.string_("${3:change step}")
+endsnippet
+
 ##############
 #  Language  #
 ##############
 snippet /func(tion)?/ "Function body" r
 {${3:| ${1:argument} |}
 	${2:// body}
-}$0
+}
 endsnippet
 
 snippet fork "Fork a function"
@@ -426,6 +510,15 @@ Plambda(
 	])
 )
 endsnippet
+
+snippet plet "Plet for use in Plambda"
+Plet(\\${1:`!p ranfruitname()`}, ${2:Pseq(`!p ranarray(4, 0.25,1.0)`,inf)})
+endsnippet
+
+snippet pget "Pget for use in Plambda"
+Pget(\\${1:`!p ranfruitname()`}, default: ${2:1}, repeats: ${3:inf})
+endsnippet
+
 
 ############
 #  Events  #

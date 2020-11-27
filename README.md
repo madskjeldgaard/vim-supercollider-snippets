@@ -1,11 +1,20 @@
-# vim-supercollider-snippets
+# [EXPERIMENTAL] vim-supercollider-snippets
 ![snippets in action](python-interpolation-pattern-bonanza.gif)
 
 Snippet files for SuperCollider filetypes to be used with the UltiSnips plugin.
 
-Covers both normal supercollider files and the full scdoc syntax. 
+Covers both normal supercollider files . 
 
 See `:h supercollider-snippets` for more info.
+
+# Experimental
+This plugin is in an experimental state and not recommended for use at the moment. It has some loopback problems with the python interpolation causing python to self implode and nvim to crash from time to time.
+
+## See also
+
+- [scnvim](https://github.com/davidgranstrom/scnvim) / [scvim](https://github.com/supercollider/scvim)
+- [vim-scdoc-snippets](https://github.com/madskjeldgaard/vim-scdoc-snippets)
+- [supercollider-h4x-nvim](https://github.com/madskjeldgaard/supercollider-h4x-nvim)
 
 ## Python interpolation
 The snippets make extensive use of Python interpolation to do various things.
